@@ -1,0 +1,74 @@
+export interface NavItem {
+  title: string;
+  href?: string;
+  description?: string;
+}
+
+export interface NavItemWithChildren extends NavItem {
+  card?: NavItem[];
+  menu?: NavItemWithChildren[];
+}
+
+export type MainNavItem = NavItemWithChildren;
+
+export type Image = {
+  id: number;
+  path: string;
+};
+
+export type Product = {
+  id: string;
+  name: string;
+  description: string;
+  images: Image[];
+  categoryId: string;
+  price: number;
+  discount: number;
+  rating: number;
+  inventory: number;
+  status: string;
+};
+
+export type Tag = {
+  name: string;
+};
+
+export type Post = {
+  id: string;
+  author: string;
+  title: string;
+  content: string;
+  image: string;
+  body: string;
+  updatedAt: string;
+  tags: string[];
+};
+
+export type Category = {
+  id: string;
+  label: string;
+};
+
+export type User = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  imageUrl: string;
+};
+
+export type Cart = {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  // image: string;
+  image: {
+    id: string;
+    name: string;
+    url: string;
+  };
+  category: string;
+  // subcategory: string;
+};
