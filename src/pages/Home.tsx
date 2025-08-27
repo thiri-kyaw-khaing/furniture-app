@@ -105,6 +105,7 @@ import BlogCard from "@/pages/blogs/BlogCard";
 import ProductCard from "@/pages/Products/ProductCard";
 
 import { products } from "@/data/product";
+import type { Product } from "@/types";
 
 // import { Skeleton } from "@/components/ui/skeleton";
 
@@ -161,8 +162,7 @@ function Home() {
 
   // const { data: productsData } = useSuspenseQuery(productQuery("?limit=8"));
   // const { data: postsData } = useSuspenseQuery(postQuery("?limit=3"));
-  const sampleProducts = products.slice(0, 4);
-  const samplePosts = posts.slice(0, 3);
+
   const Title = ({
     title,
     href,
@@ -218,12 +218,12 @@ function Home() {
         sideText="View All Products"
       />
       <div className="grid grid-cols-1 gap-6 px-4 md:grid-cols-2 md:px-0 lg:grid-cols-4">
-        {sampleProducts.slice(0, 4).map((p) => (
+        {productData.products.slice(0, 4).map((p: Product) => (
           <ProductCard product={p} key={p.id} />
         ))}
       </div>
       <Title title="Recent Blog" href="/blogs" sideText="View All Posts" />
-      <BlogCard posts={samplePosts} />
+      <BlogCard posts={postData.posts} />
     </div>
   );
 }

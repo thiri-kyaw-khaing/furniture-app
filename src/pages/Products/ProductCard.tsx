@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 interface ProductProps extends HTMLAttributes<HTMLDivElement> {
   product: Product;
 }
+const imgUrl = import.meta.env.VITE_IMG_URL;
 const AspectRatio = AspectRatioPrimitive.Root;
 
 export default function ProductCard({ product, className }: ProductProps) {
@@ -25,9 +26,9 @@ export default function ProductCard({ product, className }: ProductProps) {
         <CardHeader className="border-b space-y-2">
           <AspectRatio ratio={1 / 1} className="bg-muted w-full">
             <img
-              src={product.images[0]?.path}
+              src={imgUrl + product.images[0]?.path}
               alt={product.name}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
           </AspectRatio>
         </CardHeader>
