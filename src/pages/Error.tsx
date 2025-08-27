@@ -22,7 +22,7 @@ export default function ErrorPage() {
             </div>
             <CardTitle>Oops!</CardTitle>
             <CardDescription>An error occurs accidently</CardDescription>
-
+            <div>You can try again</div>
             <Link to="/">
               <Button>Go Home</Button>
             </Link>
