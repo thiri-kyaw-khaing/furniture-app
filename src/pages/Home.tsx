@@ -34,9 +34,22 @@ function Home() {
 
   if (isErrorPost || isErrorProduct) {
     return (
-      <p className="text-center">
-        {errorPost?.message} & {errorProduct?.message}
-      </p>
+      <div className="container mx-auto my-32 flex flex-1">
+        <div className="text-red text-center">
+          <p className="text-center">
+            {errorPost?.message} & {errorProduct?.message}
+          </p>
+          <Button
+            onClick={() => {
+              refetchPost();
+              refetchProduct();
+            }}
+            variant={"secondary"}
+          >
+            Retry
+          </Button>
+        </div>
+      </div>
     );
   }
 
