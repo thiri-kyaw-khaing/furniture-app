@@ -13,7 +13,7 @@
 //   AccordionTrigger,
 // } from "@/components/ui/accordion";
 // import { useSuspenseQuery } from "@tanstack/react-query";
-// import { ProductQuery } from "@/api/query";
+import { postQuery, productQuery, ProductQuery } from "@/api/query";
 // import type { Product } from "@/types";
 
 // const sampleProducts = products.slice(0, 4);
@@ -106,11 +106,27 @@ import ProductCard from "@/pages/Products/ProductCard";
 
 import { products } from "@/data/product";
 import type { Product } from "@/types";
+import { useQuery } from "@tanstack/react-query";
 
 // import { Skeleton } from "@/components/ui/skeleton";
 
 function Home() {
-  const { productData, postData } = useLoaderData();
+  // const { productData, postData } = useLoaderData();
+
+  const {
+    data: productData,
+    isLoading: isLoadingProduct,
+    isError: isErrorProduct,
+    error: errorProduct,
+    refetch: refetchProduct,
+  } = useQuery(productQuery("?limit=8"));
+  const {
+    data: postData,
+    isLoading: isLoadingPost,
+    isError: isErrorPost,
+    error: errorPost,
+    refetch: refetchPost,
+  } = useQuery(postQuery("infinite?limit=3"));
 
   // const {
   //   data: productsData,
@@ -162,6 +178,16 @@ function Home() {
 
   // const { data: productsData } = useSuspenseQuery(productQuery("?limit=8"));
   // const { data: postsData } = useSuspenseQuery(postQuery("?limit=3"));
+
+  if (isLoadingProduct && isLoadingPost) {
+    <p className="text-center">Loading...</p>;
+  }
+
+  if (isErrorPost && isErrorProduct) {
+    <p className="text-center">
+      {errorPost.message} & {errorProduct.message}
+    </p>;
+  }
 
   const Title = ({
     title,
