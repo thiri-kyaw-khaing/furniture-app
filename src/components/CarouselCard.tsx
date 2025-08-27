@@ -56,45 +56,35 @@ export default function CarouselCard({ products }: ProductProps) {
         ))}
       </CarouselContent> */}
       <CarouselContent className="ml-1">
-        {products.map((product) => {
-          // ✅ Build safe image URL
-          const imageUrl = product.images[0]?.path
-            ? `${imgUrl.replace(/\/$/, "")}/${product.images[0].path}`
-            : "/placeholder.png"; // fallback if no image
-
-          // ✅ Debugging log
-          console.log("Image URL for product", product.id, ":", imageUrl);
-
-          return (
-            <CarouselItem key={product.id} className="pl-1 lg:basis-1/3 flex">
-              <div className="p-4 flex lg:px-4">
-                <img
-                  src={imageUrl}
-                  alt={product.name}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-50 h-25 rounded-md"
-                />
-              </div>
-              <div className="">
-                <h3 className="text-sm font-bold">{product.name}</h3>
-                <p className="mt-2 text-sm text-gray-600">
-                  {product.description.length > 55
-                    ? product.description.substring(0, 55) + "..."
-                    : product.description}
-                </p>
-                <p>
-                  <Link
-                    to={`/products/${product.id}`}
-                    className="mt-3 text-sm font-semibold hover:underline"
-                  >
-                    Read More
-                  </Link>
-                </p>
-              </div>
-            </CarouselItem>
-          );
-        })}
+        {products.map((product) => (
+          <CarouselItem key={product.id} className="pl-1 lg:basis-1/3 flex">
+            <div className="p-4 flex lg:px-4">
+              <img
+                src={imgUrl + product.images[0].path}
+                alt={product.name}
+                loading="lazy"
+                decoding="async"
+                className="h-20 rounded-md"
+              />
+            </div>
+            <div className="">
+              <h3 className="text-sm font-bold">{product.name}</h3>
+              <p className="mt-2 text-sm text-gray-600">
+                {product.description.length > 55
+                  ? product.description.substring(0, 55) + "..."
+                  : product.description}
+              </p>
+              <p>
+                <Link
+                  to={`/products/${product.id}`}
+                  className="mt-3 text-sm font-semibold hover:underline"
+                >
+                  Read More
+                </Link>
+              </p>
+            </div>
+          </CarouselItem>
+        ))}
       </CarouselContent>
 
       <CarouselPrevious />

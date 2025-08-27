@@ -17,7 +17,7 @@ export type Image = {
 };
 
 export type Product = {
-  id: string;
+  id: number;
   name: string;
   description: string;
   images: Image[];

@@ -14,6 +14,7 @@ import { redirect } from "react-router-dom";
 export const homeLoader = async () => {
   const products = await api.get("/users/products?limit=8");
   const posts = await api.get("/users/posts/infinite?limit=3");
+
   return { productData: products.data, postData: posts.data };
 };
 
