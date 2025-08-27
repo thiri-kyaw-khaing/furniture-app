@@ -95,7 +95,7 @@
 //   );
 // }
 
-import { Link } from "react-router";
+import { Link, useLoaderData } from "react-router";
 
 import { posts } from "@/data/posts.ts";
 import Couch from "@/data/images/couch.png";
@@ -109,7 +109,7 @@ import { products } from "@/data/product";
 // import { Skeleton } from "@/components/ui/skeleton";
 
 function Home() {
-  // const { productsData, postsData } = useLoaderData();
+  const { productData, postData } = useLoaderData();
 
   // const {
   //   data: productsData,
@@ -211,7 +211,7 @@ function Home() {
         {/* Image Section */}
         <img src={Couch} alt="Couch" className="w-full lg:w-3/5" />
       </div>
-      <CarouselCard products={sampleProducts} />
+      <CarouselCard products={productData.products} />
       <Title
         title="Featured Products"
         href="/products"
