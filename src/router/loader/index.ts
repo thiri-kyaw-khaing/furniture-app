@@ -1,5 +1,5 @@
 import api, { authApi } from "@/api";
-import { postQuery, productQuery, queryClient } from "@/api/query";
+
 import useAuthStore, { Status } from "@/store/authStore";
 import { redirect } from "react-router-dom";
 

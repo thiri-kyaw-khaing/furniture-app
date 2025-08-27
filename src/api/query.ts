@@ -44,7 +44,7 @@ export const queryClient = new QueryClient({
 });
 
 const fetchProducts = async (q?: string) => {
-  const response = await api.get(`users/posts/infinite${q ?? ""}`);
+  const response = await api.get(`users/products${q ?? ""}`);
   return response.data;
 };
 // api.get(`users/products${q ?? ""}`).then((res) => res.data);
