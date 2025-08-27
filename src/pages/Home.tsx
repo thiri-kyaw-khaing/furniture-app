@@ -6,52 +6,54 @@ import BlogCard from "@/pages/blogs/BlogCard";
 import ProductCard from "@/pages/Products/ProductCard";
 import { Link } from "react-router-dom";
 import type { Product } from "@/types";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 
 // import { Skeleton } from "@/components/ui/skeleton";
 
 function Home() {
   // const { productData, postData } = useLoaderData();
 
-  const {
-    data: productData,
-    isLoading: isLoadingProduct,
-    isError: isErrorProduct,
-    error: errorProduct,
-    refetch: refetchProduct,
-  } = useQuery(productQuery("?limit=8"));
-  const {
-    data: postData,
-    isLoading: isLoadingPost,
-    isError: isErrorPost,
-    error: errorPost,
-    refetch: refetchPost,
-  } = useQuery(postQuery("?limit=3"));
+  // const {
+  //   data: productData,
+  //   isLoading: isLoadingProduct,
+  //   isError: isErrorProduct,
+  //   error: errorProduct,
+  //   refetch: refetchProduct,
+  // } = useQuery(productQuery("?limit=8"));
+  // const {
+  //   data: postData,
+  //   isLoading: isLoadingPost,
+  //   isError: isErrorPost,
+  //   error: errorPost,
+  //   refetch: refetchPost,
+  // } = useQuery(postQuery("?limit=3"));
 
-  if (isLoadingProduct || isLoadingPost) {
-    return <p className="text-center">Loading...</p>;
-  }
+  // if (isLoadingProduct || isLoadingPost) {
+  //   return <p className="text-center">Loading...</p>;
+  // }
 
-  if (isErrorPost || isErrorProduct) {
-    return (
-      <div className="container mx-auto my-32 flex flex-1">
-        <div className="text-red text-center">
-          <p className="text-center">
-            {errorPost?.message} & {errorProduct?.message}
-          </p>
-          <Button
-            onClick={() => {
-              refetchPost();
-              refetchProduct();
-            }}
-            variant={"secondary"}
-          >
-            Retry
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  // if (isErrorPost || isErrorProduct) {
+  //   return (
+  //     <div className="container mx-auto my-32 flex flex-1">
+  //       <div className="text-red text-center">
+  //         <p className="text-center">
+  //           {errorPost?.message} & {errorProduct?.message}
+  //         </p>
+  //         <Button
+  //           onClick={() => {
+  //             refetchPost();
+  //             refetchProduct();
+  //           }}
+  //           variant={"secondary"}
+  //         >
+  //           Retry
+  //         </Button>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+  const { data: productData } = useSuspenseQuery(productQuery("?limit=8"));
+  const { data: postData } = useSuspenseQuery(postQuery("?limit=3"));
 
   const Title = ({
     title,
