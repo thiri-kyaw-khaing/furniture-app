@@ -31,9 +31,9 @@
 
 // //useQuery => get method only
 // //useMutation => post, put, delete methods
-import { QueryClient } from "@tanstack/react-query";
+import { keepPreviousData, QueryClient } from "@tanstack/react-query";
 import api from ".";
-import { number } from "zod";
+// import { number } from "zod";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -133,6 +133,7 @@ export const InfiniteProductQuery = (
   ],
   queryFn: ({ pageParam = null }) =>
     fetchInfiniteProducts({ pageParam, categories, types }),
+  placeholderData: keepPreviousData,
   initialPageParam: null, //start with no cursor
   getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
   //getPreviousPageParam:(firstPage,pages)=>firstPage.prevCursor??undefined,

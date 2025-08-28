@@ -6,6 +6,7 @@ import {
   loginLoader,
   onePostLoader,
   otpLoader,
+  postInfiniteLoader,
 } from "@/router/loader";
 import Home from "./pages/Home.tsx";
 import Contact from "./pages/Contact.tsx";
@@ -51,7 +52,7 @@ export const router = createBrowserRouter([
         Component: ProductRootLayout,
 
         children: [
-          { index: true, Component: ProductPage },
+          { index: true, Component: ProductPage, loader: postInfiniteLoader },
           {
             path: ":productId",
             Component: ProductDetailPage,
