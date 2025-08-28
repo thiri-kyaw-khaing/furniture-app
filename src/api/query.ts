@@ -76,3 +76,20 @@ export const postInfiniteQuery = () => ({
   //getPreviousPageParam:(firstPage,pages)=>firstPage.prevCursor??undefined,
   //maxPages:6
 });
+
+const fetchOnePost = async (id: number) => {
+  const post = await api.get(`users/posts/${id}`);
+
+  if (!post) {
+    throw new Response("", {
+      status: 404,
+      statusText: "Not Found",
+    });
+  }
+  return post.data;
+};
+
+export const onePostQuery = (id: number) => ({
+  queryKey: ["posts", "detail", id],
+  queryFn: () => fetchOnePost(id),
+});

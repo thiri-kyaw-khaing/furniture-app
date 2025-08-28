@@ -4,6 +4,7 @@ import {
   confirmPasswordLoader,
   homeLoader,
   loginLoader,
+  onePostLoader,
   otpLoader,
 } from "@/router/loader";
 import Home from "./pages/Home.tsx";
@@ -50,7 +51,11 @@ export const router = createBrowserRouter([
         Component: ProductRootLayout,
         children: [
           { index: true, Component: ProductPage },
-          { path: ":productId", Component: ProductDetailPage },
+          {
+            path: ":productId",
+            Component: ProductDetailPage,
+            loader: onePostLoader,
+          },
         ],
       },
     ],
