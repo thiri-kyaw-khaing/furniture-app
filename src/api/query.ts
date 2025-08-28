@@ -33,6 +33,7 @@
 // //useMutation => post, put, delete methods
 import { QueryClient } from "@tanstack/react-query";
 import api from ".";
+import { number } from "zod";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -102,4 +103,38 @@ const fetchCategoryType = async () => {
 export const CategoryTypeQuery = () => ({
   queryKey: ["category", "type"],
   queryFn: () => fetchCategoryType,
+});
+
+const fetchInfiniteProducts = async ({
+  pageParam = null,
+  categories = null,
+  types = null,
+}: {
+  pageParam: number | null;
+  categories: string | null;
+  types: string | null;
+}) => {
+  let query = pageParam ? `?limit=9&cursor${pageParam}` : "?limit=9";
+  if (categories) query += `&categories${categories}`;
+  if (types) query += `&types${types}`;
+  const response = await api.get(`users/products${query}`);
+  return response.data;
+};
+
+export const InfiniteProductQuery = (
+  categories: string | null = null,
+  types: string | null = null
+) => ({
+  queryKey: [
+    "products",
+    "infinite",
+    categories ?? undefined,
+    types ?? undefined,
+  ],
+  queryFn: ({ pageParam = null }) =>
+    fetchInfiniteProducts({ pageParam, categories, types }),
+  initialPageParam: null, //start with no cursor
+  getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+  //getPreviousPageParam:(firstPage,pages)=>firstPage.prevCursor??undefined,
+  //maxPages:6
 });
