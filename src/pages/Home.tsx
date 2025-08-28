@@ -6,7 +6,7 @@ import BlogCard from "@/pages/blogs/BlogCard";
 import ProductCard from "@/pages/Products/ProductCard";
 import { Link } from "react-router-dom";
 import type { Product } from "@/types";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 // import { Skeleton } from "@/components/ui/skeleton";
 

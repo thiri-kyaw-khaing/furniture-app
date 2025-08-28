@@ -1,5 +1,6 @@
 import { createBrowserRouter, redirect } from "react-router-dom";
 import {
+  blogInfiniteLoader,
   confirmPasswordLoader,
   homeLoader,
   loginLoader,
@@ -38,6 +39,7 @@ export const router = createBrowserRouter([
       {
         path: "blogs",
         Component: BlogRootLayout,
+        loader: blogInfiniteLoader,
         children: [
           { index: true, Component: BlogPage },
           { path: ":postId", Component: BlogDetailPage },
