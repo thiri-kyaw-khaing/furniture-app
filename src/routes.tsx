@@ -43,18 +43,18 @@ export const router = createBrowserRouter([
         loader: blogInfiniteLoader,
         children: [
           { index: true, Component: BlogPage },
-          { path: ":postId", Component: BlogDetailPage },
+          { path: ":postId", Component: BlogDetailPage, loader: onePostLoader },
         ],
       },
       {
         path: "products",
         Component: ProductRootLayout,
+
         children: [
           { index: true, Component: ProductPage },
           {
             path: ":productId",
             Component: ProductDetailPage,
-            loader: onePostLoader,
           },
         ],
       },

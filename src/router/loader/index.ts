@@ -1,4 +1,4 @@
-import api, { authApi } from "@/api";
+import { authApi } from "@/api";
 import {
   onePostQuery,
   postInfiniteQuery,
@@ -6,7 +6,7 @@ import {
   productQuery,
   queryClient,
 } from "@/api/query";
-import { LoaderFunctionArgs } from "react-router-dom";
+import type { LoaderFunctionArgs } from "react-router-dom";
 import useAuthStore, { Status } from "@/store/authStore";
 import { redirect } from "react-router-dom";
 
