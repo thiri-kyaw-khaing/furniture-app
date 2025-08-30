@@ -1,4 +1,4 @@
-import { filterList } from "@/data/product.ts";
+// import { filterList } from "@/data/product.ts";
 import ProductCard from "@/pages/Products/ProductCard.tsx";
 // import Pagination from "@/pages/Products/PaginationPage.tsx";
 import ProductFilter from "@/pages/Products/ProductFilter.tsx";
@@ -6,9 +6,9 @@ import { useInfiniteQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { CategoryTypeQuery, InfiniteProductQuery } from "@/api/query";
 import { Button } from "@/components/ui/button";
 
-// const { data: cateType } = useSuspenseQuery(CategoryTypeQuery());
-
 export default function ProductPage() {
+  const { data: cateType } = useSuspenseQuery(CategoryTypeQuery());
+  console.log("Category Type Output:", cateType);
   const {
     data,
     status,
@@ -18,6 +18,7 @@ export default function ProductPage() {
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery(InfiniteProductQuery());
+
   const allProducts = data?.pages.flatMap((page) => page.products) || [];
   return status === "pending" ? (
     <p>"Loading..."</p>
@@ -27,7 +28,7 @@ export default function ProductPage() {
     <div className="container mx-auto  max-w-screen-xl ">
       <section className="flex flex-col lg:flex-row">
         <section className="my-8 ml-4 w-full lg:w-1/5 lg:ml-0">
-          <ProductFilter filterList={filterList} />
+          <ProductFilter filterList={cateType} />
         </section>
         <section className="w-full lg:w-4/5 my-6 ml-4 lg:ml-0">
           <h2 className="font-bold text-2xl">All Products</h2>

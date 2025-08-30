@@ -1,183 +1,172 @@
-"use client"
+"use client";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 // import { toast } from "sonner"
-import { z } from "zod"
+import { z } from "zod";
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form"
-import type {Category} from "@/types";
-interface ProductFilterProps{
-    filterList:{categories:Category[];types:Category[]}
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import type { Category } from "@/types";
+
+interface FilterProps {
+  categories: Category[];
+  types: Category[];
 }
-const items = [
-    {
-        id: "recents",
-        label: "Recents",
-    },
-    {
-        id: "home",
-        label: "Home",
-    },
-    {
-        id: "applications",
-        label: "Applications",
-    },
-    {
-        id: "desktop",
-        label: "Desktop",
-    },
-    {
-        id: "downloads",
-        label: "Downloads",
-    },
-    {
-        id: "documents",
-        label: "Documents",
-    },
-] as const
+
+interface ProductFilterProps {
+  filterList: FilterProps;
+}
 
 const FormSchema = z.object({
-    categories: z.array(z.string()).refine((value) => value.some((item) => item), {
-        message: "You have to select at least one item.",
+  categories: z
+    .array(z.string())
+    .refine((value) => value.some((item) => item), {
+      message: "You have to select at least one item.",
     }),
-    types: z.array(z.string()).refine((value) => value.some((item) => item), {
-        message: "You have to select at least one item.",
-    })
-})
+  types: z.array(z.string()).refine((value) => value.some((item) => item), {
+    message: "You have to select at least one item.",
+  }),
+});
 
-export default function ProductFilter({filterList}:ProductFilterProps) {
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
-        defaultValues: {
-            categories: [],
-            types:[]
-        },
-    })
+export default function ProductFilter({ filterList }: ProductFilterProps) {
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      categories: [],
+      types: [],
+    },
+  });
 
-    function onSubmit(data: z.infer<typeof FormSchema>) {
-        // toast("You submitted the following values", {
-        //     description: (
-        //         <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
-        //   <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        // </pre>
-        //     ),
-        // })
-        console.log(data)
-    }
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    // toast("You submitted the following values", {
+    //     description: (
+    //         <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
+    //   <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+    // </pre>
+    //     ),
+    // })
+    console.log(data);
+  }
 
-    return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="categories"
+          render={() => (
+            <FormItem>
+              <div className="mb-4">
+                <FormLabel className="text-base">Furnitures made by</FormLabel>
+                {/*<FormDescription>*/}
+                {/*    Select the items you want to display in the sidebar.*/}
+                {/*</FormDescription>*/}
+              </div>
+              {(filterList?.categories ?? []).map((item) => (
                 <FormField
-                    control={form.control}
-                    name="categories"
-                    render={() => (
-                        <FormItem>
-                            <div className="mb-4">
-                                <FormLabel className="text-base">Furnitures made by</FormLabel>
-                                {/*<FormDescription>*/}
-                                {/*    Select the items you want to display in the sidebar.*/}
-                                {/*</FormDescription>*/}
-                            </div>
-                            {filterList.categories.map((item) => (
-                                <FormField
-                                    key={item.id}
-                                    control={form.control}
-                                    name="categories"
-                                    render={({ field }) => {
-                                        return (
-                                            <FormItem
-                                                key={item.id}
-                                                className="flex flex-row items-center gap-2"
-                                            >
-                                                <FormControl className="container">
-                                                    <Checkbox className=""
-                                                        checked={field.value?.includes(item.id)}
-                                                        onCheckedChange={(checked) => {
-                                                            return checked
-                                                                ? field.onChange([...field.value, item.id])
-                                                                : field.onChange(
-                                                                    field.value?.filter(
-                                                                        (value) => value !== item.id
-                                                                    )
-                                                                )
-                                                        }}
-                                                    />
-                                                </FormControl>
-                                                <FormLabel className="text-sm font-normal ">
-                                                    {item.label}
-                                                </FormLabel>
-                                            </FormItem>
-                                        )
-                                    }}
-                                />
-                            ))}
-                            <FormMessage />
-                        </FormItem>
-                    )}
+                  key={item.id}
+                  control={form.control}
+                  name="categories"
+                  render={({ field }) => {
+                    return (
+                      <FormItem
+                        key={item.id}
+                        className="flex flex-row items-center gap-2"
+                      >
+                        <FormControl className="container">
+                          <Checkbox
+                            className=""
+                            checked={field.value?.includes(item.id.toString())}
+                            onCheckedChange={(checked) => {
+                              return checked
+                                ? field.onChange([
+                                    ...field.value,
+                                    item.id.toString(),
+                                  ])
+                                : field.onChange(
+                                    field.value?.filter(
+                                      (value) => value !== item.id.toString()
+                                    )
+                                  );
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="text-sm font-normal ">
+                          {item.name}
+                        </FormLabel>
+                      </FormItem>
+                    );
+                  }}
                 />
+              ))}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="types"
+          render={() => (
+            <FormItem>
+              <div className="mb-4">
+                <FormLabel className="text-base">Furnitures types</FormLabel>
+                {/*<FormDescription>*/}
+                {/*    Select the items you want to display in the sidebar.*/}
+                {/*</FormDescription>*/}
+              </div>
+              {(filterList?.types ?? []).map((item) => (
                 <FormField
-                    control={form.control}
-                    name="types"
-                    render={() => (
-                        <FormItem>
-                            <div className="mb-4">
-                                <FormLabel className="text-base">Furnitures types</FormLabel>
-                                {/*<FormDescription>*/}
-                                {/*    Select the items you want to display in the sidebar.*/}
-                                {/*</FormDescription>*/}
-                            </div>
-                            {filterList.types.map((item) => (
-                                <FormField
-                                    key={item.id}
-                                    control={form.control}
-                                    name="types"
-                                    render={({ field }) => {
-                                        return (
-                                            <FormItem
-                                                key={item.id}
-                                                className="flex flex-row items-center gap-2"
-                                            >
-                                                <FormControl className="container">
-                                                    <Checkbox className=""
-                                                              checked={field.value?.includes(item.id)}
-                                                              onCheckedChange={(checked) => {
-                                                                  return checked
-                                                                      ? field.onChange([...field.value, item.id])
-                                                                      : field.onChange(
-                                                                          field.value?.filter(
-                                                                              (value) => value !== item.id
-                                                                          )
-                                                                      )
-                                                              }}
-                                                    />
-                                                </FormControl>
-                                                <FormLabel className="text-sm font-normal ">
-                                                    {item.label}
-                                                </FormLabel>
-                                            </FormItem>
-                                        )
-                                    }}
-                                />
-                            ))}
-                            <FormMessage />
-                        </FormItem>
-                    )}
+                  key={item.id}
+                  control={form.control}
+                  name="types"
+                  render={({ field }) => {
+                    return (
+                      <FormItem
+                        key={item.id}
+                        className="flex flex-row items-center gap-2"
+                      >
+                        <FormControl className="container">
+                          <Checkbox
+                            className=""
+                            checked={field.value?.includes(item.id.toString())}
+                            onCheckedChange={(checked) => {
+                              return checked
+                                ? field.onChange([
+                                    ...field.value,
+                                    item.id.toString(),
+                                  ])
+                                : field.onChange(
+                                    field.value?.filter(
+                                      (value) => value !== item.id.toString()
+                                    )
+                                  );
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="text-sm font-normal ">
+                          {item.name}
+                        </FormLabel>
+                      </FormItem>
+                    );
+                  }}
                 />
-                <Button type="submit">Filter</Button>
-            </form>
-
-        </Form>
-    )
+              ))}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Filter</Button>
+      </form>
+    </Form>
+  );
 }

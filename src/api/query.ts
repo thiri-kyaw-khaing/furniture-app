@@ -95,14 +95,12 @@ export const onePostQuery = (id: number) => ({
   queryFn: () => fetchOnePost(id),
 });
 
-const fetchCategoryType = async () => {
-  const post = await api.get("users/filter-type");
-  return post.data;
-};
+const fetchCategoryType = async () =>
+  api.get("users/filter-type").then((res) => res.data);
 
 export const CategoryTypeQuery = () => ({
   queryKey: ["category", "type"],
-  queryFn: () => fetchCategoryType,
+  queryFn: fetchCategoryType,
 });
 
 const fetchInfiniteProducts = async ({
@@ -110,13 +108,13 @@ const fetchInfiniteProducts = async ({
   categories = null,
   types = null,
 }: {
-  pageParam: number | null;
-  categories: string | null;
-  types: string | null;
+  pageParam?: number | null;
+  categories?: string | null;
+  types?: string | null;
 }) => {
-  let query = pageParam ? `?limit=9&cursor${pageParam}` : "?limit=9";
-  if (categories) query += `&categories${categories}`;
-  if (types) query += `&types${types}`;
+  let query = pageParam ? `?limit=9&cursor=${pageParam}` : "?limit=9";
+  if (categories) query += `&categories=${categories}`;
+  if (types) query += `&types=${types}`;
   const response = await api.get(`users/products${query}`);
   return response.data;
 };
@@ -131,11 +129,11 @@ export const InfiniteProductQuery = (
     categories ?? undefined,
     types ?? undefined,
   ],
-  queryFn: ({ pageParam = null }) =>
+  queryFn: ({ pageParam }: { pageParam?: number | null }) =>
     fetchInfiniteProducts({ pageParam, categories, types }),
   placeholderData: keepPreviousData,
   initialPageParam: null, //start with no cursor
-  getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+  getNextPageParam: (lastPage, pages) => lastPage.nextCursor ?? undefined,
   //getPreviousPageParam:(firstPage,pages)=>firstPage.prevCursor??undefined,
   //maxPages:6
 });

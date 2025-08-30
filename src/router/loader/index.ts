@@ -76,7 +76,7 @@ export const onePostLoader = async ({ params }: LoaderFunctionArgs) => {
   return { postId: params.postId };
 };
 
-export const postInfiniteLoader = async () => {
+export const productInfiniteLoader = async () => {
   await queryClient.ensureQueryData(CategoryTypeQuery());
   await queryClient.prefetchInfiniteQuery(InfiniteProductQuery());
   return null;
