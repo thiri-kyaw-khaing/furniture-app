@@ -1,4 +1,4 @@
-import { Link, useLoaderData } from "react-router-dom";
+import { Link, useLoaderData, useNavigate } from "react-router-dom";
 // import { products } from "@/data/product.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -26,6 +26,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import type { Image, Product } from "@/types";
 
 export default function ProductDetail() {
+  const navigate = useNavigate();
   const imgUrl = import.meta.env.VITE_IMG_URL;
   const { productId } = useLoaderData();
   const { data: oneProduct } = useSuspenseQuery(oneProductQuery(productId));
@@ -40,9 +41,12 @@ export default function ProductDetail() {
   return (
     <div className="container mx-auto  max-w-screen-xl px-4 md:px-0 py-8">
       <Button className="mb-8" variant={"outline"} asChild>
-        <Link to="/products" className="flex items-center gap-2 ml-8">
+        <Button variant="outline" className="mt-8" onClick={() => navigate(-1)}>
           <ArrowLeftIcon /> All Products
-        </Link>
+        </Button>
+        {/* <Link to="/products" className="flex items-center gap-2 ml-8"> */}
+
+        {/* </Link> */}
       </Button>
       <section className="flex flex-col gap-8 md:flex-row md:gap-16">
         <Carousel
