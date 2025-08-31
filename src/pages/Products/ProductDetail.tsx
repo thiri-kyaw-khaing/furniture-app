@@ -1,5 +1,5 @@
-import { Link, useLoaderData, useParams } from "react-router-dom";
-import { products } from "@/data/product.ts";
+import { Link, useLoaderData } from "react-router-dom";
+// import { products } from "@/data/product.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import ProductCard from "@/pages/Products/ProductCard.tsx";
@@ -7,13 +7,10 @@ import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import * as React from "react";
 import Autoplay from "embla-carousel-autoplay";
 
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Separator } from "@radix-ui/react-separator";
 import Rating from "@/pages/Products/Rating.tsx";
@@ -24,17 +21,17 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { oneProductQuery, productQuery, queryClient } from "@/api/query";
-const imgUrl = import.meta.env.VITE_IMG_URL;
-const { productId } = useLoaderData();
-const { data: oneProduct } = queryClient.ensureQueryData(
-  oneProductQuery(productId)
-);
-const { data: products } = queryClient.ensureQueryData(productQuery("limit=4"));
+import { oneProductQuery, productQuery } from "@/api/query";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import type { Image, Product } from "@/types";
 
 export default function ProductDetail() {
-  const { productId } = useParams<{ productId: string }>();
-  const product = products.find((product) => product.id === productId);
+  const imgUrl = import.meta.env.VITE_IMG_URL;
+  const { productId } = useLoaderData();
+  const { data: oneProduct } = useSuspenseQuery(oneProductQuery(productId));
+  const { data: products } = useSuspenseQuery(productQuery("?limit=4"));
+  //   const { productId } = useParams<{ productId: string }>();
+  //   const product = products.find((product) => product.id === productId);
 
   const plugin = React.useRef(
     Autoplay({ delay: 2000, stopOnInteraction: true })
@@ -55,13 +52,15 @@ export default function ProductDetail() {
           onMouseLeave={plugin.current.reset}
         >
           <CarouselContent>
-            {product?.images.map((image) => (
-              <CarouselItem key={image.id}>
+            {oneProduct.product.images.map((img: Image) => (
+              <CarouselItem key={img.id}>
                 <div className="p-1  w-full">
                   <img
-                    src={image.path}
+                    src={imgUrl + img.path}
                     alt=""
                     className="w-full h-full rounded-md object-cover"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
               </CarouselItem>
@@ -71,21 +70,21 @@ export default function ProductDetail() {
         <Separator className="mt-4 md:hidden" />
         <div className="ml-8 w-full flex flex-col gap-4 md:w-1/2 ">
           <h2 className="font-bold text-2xl mb-2 line-clamp-1">
-            {product?.name}
+            {oneProduct.product.name}
           </h2>
           <p className="text-base text-muted-foreground">
-            ${Number(product?.price)}
+            ${Number(oneProduct.product.price)}
           </p>
           <Separator className="my-1.5" />
 
           <p className="text-base text-muted-foreground">
-            {product?.inventory} in stock
+            {oneProduct.product.inventory} in stock
           </p>
           <div className="flex items-center justify-between">
-            <Rating rating={Number(product?.rating)} />
+            <Rating rating={Number(oneProduct.product.rating)} />
             <AddtoFav
-              productId={product?.id ?? ""}
-              rating={product?.rating ?? 0}
+              productId={oneProduct.product.id ?? ""}
+              rating={oneProduct.product.rating ?? 0}
             />
           </div>
           <Separator className="my-1.5" />
@@ -99,7 +98,8 @@ export default function ProductDetail() {
               <AccordionItem value="item-1" className="border-none">
                 <AccordionTrigger>Description</AccordionTrigger>
                 <AccordionContent className="flex flex-col gap-4 text-balance">
-                  {product?.description ?? "No description for this product"}
+                  {oneProduct.product.description ??
+                    "No description for this product"}
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -112,7 +112,7 @@ export default function ProductDetail() {
         </h2>
         <ScrollArea className="pb-4 px-8">
           <div className="flex gap-4">
-            {products.slice(0, 4).map((item) => (
+            {products.products.slice(0, 4).map((item: Product) => (
               <ProductCard
                 product={item}
                 key={item.id}

@@ -139,14 +139,14 @@ export const InfiniteProductQuery = (
 });
 
 const fetchOneProduct = async (id: number) => {
-  const response = await api.get(`users/products/${id}`);
-  if (!response) {
+  const product = await api.get(`users/products/${id}`);
+  if (!product) {
     throw new Response("", {
       status: 404,
       statusText: "Not Found",
     });
   }
-  return response.data;
+  return product.data;
 };
 
 export const oneProductQuery = (id: number) => ({

@@ -42,7 +42,7 @@ export default function ProductPage() {
     data,
     status,
     error,
-    isFetching,
+
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
