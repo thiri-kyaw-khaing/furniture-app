@@ -25,25 +25,33 @@ interface FilterProps {
 
 interface ProductFilterProps {
   filterList: FilterProps;
+  seletedCategory: string[];
+  seletedType: string[];
+  onFilterChange: (category: string[], type: string[]) => void;
 }
 
 const FormSchema = z.object({
-  categories: z
-    .array(z.string())
-    .refine((value) => value.some((item) => item), {
-      message: "You have to select at least one item.",
-    }),
-  types: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: "You have to select at least one item.",
-  }),
+  categories: z.array(z.string()),
+  // .refine((value) => value.some((item) => item), {
+  //   message: "You have to select at least one item.",
+  // }),
+  types: z.array(z.string()),
+  // .refine((value) => value.some((item) => item), {
+  //   message: "You have to select at least one item.",
+  // }),
 });
 
-export default function ProductFilter({ filterList }: ProductFilterProps) {
+export default function ProductFilter({
+  filterList,
+  seletedCategory,
+  seletedType,
+  onFilterChange,
+}: ProductFilterProps) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      categories: [],
-      types: [],
+      categories: seletedCategory, //data.categories
+      types: seletedType, //data.types
     },
   });
 
@@ -55,7 +63,7 @@ export default function ProductFilter({ filterList }: ProductFilterProps) {
     // </pre>
     //     ),
     // })
-    console.log(data);
+    onFilterChange(data.categories, data.types);
   }
 
   return (
