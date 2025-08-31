@@ -1,87 +1,46 @@
-import { useEffect } from "react";
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  //FormDescription,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
+import {
+  MinusIcon,
+  PlusIcon,
+  ShoppingBasket,
+  ShoppingBasketIcon,
+} from "lucide-react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { MinusIcon, PlusIcon } from "lucide-react";
-// import { useCartStore } from "@/store/cartStore";
-
 const quantitySchema = z.object({
-  quantity: z
-    .string()
-    .min(1, "Must not be empty")
-    .max(4, "Too Many! Is it real?")
-    .regex(/^\d+$/, "Must be a number"),
+  number: z.number().min(0),
 });
 
-interface ShowBuyNowProps {
-  canBuy: boolean;
-  onHandleCart: (quantity: number) => void;
-  idInCart: number;
-}
-
-export default function AddToCartForm({
-  canBuy,
-  onHandleCart,
-  idInCart,
-}: ShowBuyNowProps) {
-  const cartItem = useCartStore((state) =>
-    state.carts.find((item) => item.id === idInCart)
-  );
-
+export default function AddToCart({ showBuyNow }: { showBuyNow?: boolean }) {
+  // ...
+  // 1. Define your form.
   const form = useForm<z.infer<typeof quantitySchema>>({
     resolver: zodResolver(quantitySchema),
     defaultValues: {
-      quantity: cartItem ? cartItem.quantity.toString() : "1",
+      number: 1, // Default quantity
     },
   });
 
-  const { setValue, watch } = form;
-  const currentQuantity = Number(watch("quantity"));
-
-  useEffect(() => {
-    if (cartItem) {
-      setValue("quantity", cartItem.quantity.toString(), {
-        shouldValidate: true,
-      });
-    }
-  }, [cartItem, setValue]);
-
-  const handleDecrease = () => {
-    const newQuantity = Math.max(currentQuantity - 1, 0); // Min limit 0
-    setValue("quantity", newQuantity.toString(), { shouldValidate: true });
-  };
-
-  const handleIncrease = () => {
-    const newQuantity = Math.min(currentQuantity + 1, 9999); // Max limit 9999
-    setValue("quantity", newQuantity.toString(), { shouldValidate: true });
-  };
-
+  // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof quantitySchema>) {
-    // console.log(values);
-    // Call api
-    onHandleCart(Number(values.quantity));
-    toast.success(
-      cartItem
-        ? "Updated Cart successfully"
-        : "Product is added to cart successfully."
-    );
+    console.log(values);
   }
-
   return (
     <Form {...form}>
       <form
@@ -90,65 +49,60 @@ export default function AddToCartForm({
       >
         <div className="flex items-center">
           <Button
-            type="button"
-            variant="outline"
-            size="icon"
             className="size-8 shrink-0 rounded-r-none"
-            onClick={handleDecrease}
-            disabled={currentQuantity <= 1}
+            type="button"
+            variant={"outline"}
+            size={"icon"}
           >
-            <MinusIcon className="size-3" aria-hidden="true" />
-            <span className="sr-only">Remove one item</span>
+            <MinusIcon className="size-3" />
           </Button>
           <FormField
             control={form.control}
-            name="quantity"
+            name="number"
             render={({ field }) => (
-              <FormItem className="space-y-0">
-                <FormLabel className="sr-only">Quantity</FormLabel>
+              <FormItem className="relative space-y-0">
                 <FormControl>
                   <Input
                     type="number"
                     inputMode="numeric"
-                    min={1}
-                    max={9999}
+                    min={0}
                     {...field}
-                    className="h-8 w-16 rounded-none border-x-0 text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                    className="h-8 w-16 rounded-none border-x-0"
                   />
                 </FormControl>
+
                 <FormMessage />
               </FormItem>
             )}
           />
           <Button
-            type="button"
-            variant="outline"
-            size="icon"
             className="size-8 shrink-0 rounded-l-none"
-            onClick={handleIncrease}
-            disabled={currentQuantity >= 9999}
+            type="button"
+            variant={"outline"}
+            size={"icon"}
           >
-            <PlusIcon className="size-3" aria-hidden="true" />
-            <span className="sr-only">Add one item</span>
+            <PlusIcon className="size-3" />
           </Button>
         </div>
-        <div className="flex items-center space-x-2.5">
+        <div className="flex items-center space-x-2">
           <Button
             type="button"
-            aria-label="Buy now"
             size="sm"
-            className={cn("w-full bg-own font-bold", !canBuy && "bg-slate-400")}
+            className={cn(
+              "w-[130px] text-white bg-black",
+              showBuyNow ? "" : "hidden"
+            )}
           >
             Buy Now
           </Button>
           <Button
             type="submit"
-            aria-label="Add To Cart"
-            variant={canBuy ? "outline" : "default"}
             size="sm"
-            className="w-full font-semibold"
+            variant={showBuyNow ? "outline" : "default"}
+            className="w-[130px] text-black"
           >
-            {cartItem ? "Update Cart" : "Add To Cart"}
+            <ShoppingBasketIcon />
+            Add to Cart
           </Button>
         </div>
       </form>

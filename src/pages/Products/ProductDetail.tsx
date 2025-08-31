@@ -24,6 +24,7 @@ import {
 import { oneProductQuery, productQuery } from "@/api/query";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import type { Image, Product } from "@/types";
+import AddToCartForm from "@/pages/Products/AddToCart";
 
 export default function ProductDetail() {
   const navigate = useNavigate();
@@ -41,7 +42,11 @@ export default function ProductDetail() {
   return (
     <div className="container mx-auto  max-w-screen-xl px-4 md:px-0 py-8">
       <Button className="mb-8" variant={"outline"} asChild>
-        <Button variant="outline" className="mt-8" onClick={() => navigate(-1)}>
+        <Button
+          variant="outline"
+          className="mt-8 ml-9"
+          onClick={() => navigate(-1)}
+        >
           <ArrowLeftIcon /> All Products
         </Button>
         {/* <Link to="/products" className="flex items-center gap-2 ml-8"> */}
@@ -91,6 +96,7 @@ export default function ProductDetail() {
               rating={oneProduct.product.rating ?? 0}
             />
           </div>
+          <AddToCartForm showBuyNow={oneProduct.product.status === "ACTIVE"} />
           <Separator className="my-1.5" />
           <div>
             <Accordion
