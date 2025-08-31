@@ -5,6 +5,7 @@ import {
   homeLoader,
   loginLoader,
   onePostLoader,
+  oneProductLoader,
   otpLoader,
   productInfiniteLoader,
 } from "@/router/loader";
@@ -60,6 +61,7 @@ export const router = createBrowserRouter([
           {
             path: ":productId",
             Component: ProductDetailPage,
+            loader: oneProductLoader,
           },
         ],
       },

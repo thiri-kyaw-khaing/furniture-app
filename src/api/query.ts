@@ -137,3 +137,19 @@ export const InfiniteProductQuery = (
   //getPreviousPageParam:(firstPage,pages)=>firstPage.prevCursor??undefined,
   //maxPages:6
 });
+
+const fetchOneProduct = async (id: number) => {
+  const response = await api.get(`users/products/${id}`);
+  if (!response) {
+    throw new Response("", {
+      status: 404,
+      statusText: "Not Found",
+    });
+  }
+  return response.data;
+};
+
+export const oneProductQuery = (id: number) => ({
+  queryKey: ["product", "detail", "query", id],
+  queryFn: () => fetchOneProduct(id),
+});
