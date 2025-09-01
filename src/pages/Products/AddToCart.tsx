@@ -8,23 +8,16 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  MinusIcon,
-  PlusIcon,
-  ShoppingBasket,
-  ShoppingBasketIcon,
-} from "lucide-react";
-import { useState } from "react";
+import { MinusIcon, PlusIcon, ShoppingBasketIcon } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 const quantitySchema = z.object({
-  number: z.number().min(0),
+  number: z.number().min(1).max(4, "too many items"),
 });
 
 export default function AddToCart({ showBuyNow }: { showBuyNow?: boolean }) {

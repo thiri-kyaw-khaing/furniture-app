@@ -1,11 +1,21 @@
 import type { Cart } from "@/types";
 import Editable from "@/pages/Products/Editable.tsx";
+import { useCartStore } from "@/store/cartStore";
 const imgUrl = import.meta.env.VITE_IMG_URL;
 interface CartItemProps {
   cart: Cart;
 }
 
 export default function cartItem({ cart }: CartItemProps) {
+  const { updateItem, removeItem } = useCartStore();
+
+  const updateHandler = (quantity: number) => {
+    updateItem(cart.id, quantity);
+  };
+
+  const deleteItem = () => {
+    removeItem(cart.id);
+  };
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-4">
@@ -17,7 +27,11 @@ export default function cartItem({ cart }: CartItemProps) {
         </div>
       </div>
       <div className="mb-6">
-        <Editable />
+        <Editable
+          onDelete={deleteItem}
+          quantity={cart.quantity}
+          onUpdate={updateHandler}
+        />
       </div>
     </div>
   );
