@@ -87,6 +87,29 @@ export const otpAction = async ({ request }: ActionFunctionArgs) => {
   }
 };
 
+export const verifyAction = async ({ request }: ActionFunctionArgs) => {
+  const authStore = useAuthStore.getState();
+  const formData = await request.formData();
+  const credientials = {
+    phone: authStore.phone,
+    otp: formData.get("otp"),
+    token: authStore.token,
+  };
+  try {
+    const response = await authApi.post("verify-otp", credientials);
+    if (response.status == 200) {
+      authStore.setAuth(response.data.phone, response.data.token, Status.reset);
+      return redirect("/reset/new-password");
+    } else {
+      return { error: response.data || "OTP verification failed" };
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return error.response?.data || { error: "Verifying OTP failed" };
+    } else throw error;
+  }
+};
+
 export const confirmPasswordAction = async ({
   request,
 }: ActionFunctionArgs) => {
@@ -138,6 +161,29 @@ export const resetAction = async ({ request }: ActionFunctionArgs) => {
   } catch (error) {
     if (error instanceof AxiosError) {
       return error.response?.data || { error: "Sending OTP failed" };
+    } else throw error;
+  }
+};
+
+export const newPasswordAction = async ({ request }: ActionFunctionArgs) => {
+  const authStore = useAuthStore.getState();
+  const formData = await request.formData();
+  const credentials = {
+    phone: authStore.phone,
+    password: formData.get("password"),
+    token: authStore.token,
+  };
+
+  try {
+    const response = await authApi.post("reset-password", credentials);
+    if (response.status == 201) {
+      authStore.setAuth(response.data.phone, response.data.token, Status.reset);
+    }
+    authStore.clearAuth();
+    return redirect("/");
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return error.response?.data || { error: "Resetting password failed" };
     } else throw error;
   }
 };

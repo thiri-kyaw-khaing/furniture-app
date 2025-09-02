@@ -54,6 +54,14 @@ export const otpLoader = async () => {
   return null;
 };
 
+export const verifyLoader = async () => {
+  const authStore = useAuthStore.getState();
+  if (authStore.status !== Status.verify) {
+    return redirect("/reset");
+  }
+  return null;
+};
+
 export const confirmPasswordLoader = async () => {
   const authStore = useAuthStore.getState();
 
@@ -91,4 +99,13 @@ export const oneProductLoader = async ({ params }: LoaderFunctionArgs) => {
   await queryClient.ensureQueryData(productQuery("?limit=4"));
   await queryClient.ensureQueryData(oneProductQuery(Number(params.productId)));
   return { productId: params.productId };
+};
+
+export const newPasswordLoader = async () => {
+  const authStore = useAuthStore.getState();
+
+  if (authStore.status !== Status.reset) {
+    return redirect("/reset");
+  }
+  return null;
 };

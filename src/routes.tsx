@@ -4,10 +4,12 @@ import {
   confirmPasswordLoader,
   homeLoader,
   loginLoader,
+  newPasswordLoader,
   onePostLoader,
   oneProductLoader,
   otpLoader,
   productInfiniteLoader,
+  verifyLoader,
 } from "@/router/loader";
 import Home from "./pages/Home.tsx";
 import Contact from "./pages/Contact.tsx";
@@ -24,15 +26,19 @@ import {
   confirmPasswordAction,
   loginAction,
   logoutAction,
+  newPasswordAction,
   otpAction,
   registerAction,
   resetAction,
+  verifyAction,
 } from "./router/action/index.ts";
 import AuthRootLayout from "./components/auth/AuthRootLayout.tsx";
 import SignUpPage from "@/pages/Auth/SignUpPage.tsx";
 import InputPage from "@/pages/Auth/Input-Otp.tsx";
 import ConfirmPasswordPage from "./pages/Auth/Confirm-password.tsx";
 import ResetPassword from "./pages/Auth/Reset-password.tsx";
+import VerifyPage from "./pages/Auth/VerifyPage.tsx";
+import NewPasswordPage from "./pages/Auth/newPasswordPage.tsx";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -113,6 +119,18 @@ export const router = createBrowserRouter([
         Component: ResetPassword,
         // loader: loginLoader,
         action: resetAction,
+      },
+      {
+        path: "verify",
+        Component: VerifyPage,
+        loader: verifyLoader,
+        action: verifyAction,
+      },
+      {
+        path: "new-password",
+        Component: NewPasswordPage,
+        loader: newPasswordLoader,
+        action: newPasswordAction,
       },
     ],
   },

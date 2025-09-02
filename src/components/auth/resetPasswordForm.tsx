@@ -28,7 +28,7 @@ const FormSchema = z.object({
     .regex(/^\d+$/, "phone number must be numbers"),
 });
 
-export default function SignUpForm({
+export default function resetPasswordForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
