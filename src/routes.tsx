@@ -31,6 +31,7 @@ import AuthRootLayout from "./components/auth/AuthRootLayout.tsx";
 import SignUpPage from "@/pages/Auth/SignUpPage.tsx";
 import InputPage from "@/pages/Auth/Input-Otp.tsx";
 import ConfirmPasswordPage from "./pages/Auth/Confirm-password.tsx";
+import ResetPassword from "./pages/Auth/Reset-password.tsx";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -101,5 +102,17 @@ export const router = createBrowserRouter([
     path: "/logout",
     action: logoutAction,
     loader: () => redirect("/"),
+  },
+  {
+    path: "/reset",
+    Component: AuthRootLayout,
+    children: [
+      {
+        index: true,
+        Component: ResetPassword,
+        // loader: loginLoader,
+        // action: registerAction,
+      },
+    ],
   },
 ]);
