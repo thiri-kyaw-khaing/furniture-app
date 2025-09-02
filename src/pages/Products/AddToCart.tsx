@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -77,6 +77,9 @@ export default function AddToCart({
   function onSubmit(values: z.infer<typeof quantitySchema>) {
     //
     onHandleUpdate(Number(values.quantity));
+    toast.success(
+      cartItem ? "Updated Cart Successfully" : "Add to Cart Successfully"
+    );
   }
   // const { setValue, watch } = form;
   // const currentQuantity = Number(watch("quantity"));
