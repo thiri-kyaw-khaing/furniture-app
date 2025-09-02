@@ -26,6 +26,7 @@ import {
   logoutAction,
   otpAction,
   registerAction,
+  resetAction,
 } from "./router/action/index.ts";
 import AuthRootLayout from "./components/auth/AuthRootLayout.tsx";
 import SignUpPage from "@/pages/Auth/SignUpPage.tsx";
@@ -111,7 +112,7 @@ export const router = createBrowserRouter([
         index: true,
         Component: ResetPassword,
         // loader: loginLoader,
-        // action: registerAction,
+        action: resetAction,
       },
     ],
   },

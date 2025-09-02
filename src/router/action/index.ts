@@ -115,3 +115,29 @@ export const confirmPasswordAction = async ({
     } else throw error;
   }
 };
+
+export const resetAction = async ({ request }: ActionFunctionArgs) => {
+  const authStore = useAuthStore.getState();
+  const formData = await request.formData();
+  const credentials = Object.fromEntries(formData);
+
+  try {
+    const response = await authApi.post("forget-password", credentials);
+
+    if (response.status == 200) {
+      //Client Management
+      authStore.setAuth(
+        response.data.phone,
+        response.data.token,
+        Status.verify
+      );
+      return redirect("/reset/verify");
+    } else {
+      return { error: response.data || "Sending OTP failed" };
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return error.response?.data || { error: "Sending OTP failed" };
+    } else throw error;
+  }
+};
