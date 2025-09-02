@@ -25,6 +25,7 @@ import { oneProductQuery, productQuery } from "@/api/query";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import type { Image, Product } from "@/types";
 import AddToCartForm from "@/pages/Products/AddToCart";
+import { useCartStore } from "@/store/cartStore";
 
 export default function ProductDetail() {
   const navigate = useNavigate();
@@ -34,6 +35,16 @@ export default function ProductDetail() {
   const { data: products } = useSuspenseQuery(productQuery("?limit=4"));
   //   const { productId } = useParams<{ productId: string }>();
   //   const product = products.find((product) => product.id === productId);
+  const { addItem } = useCartStore();
+  const handleUpdate = (quantity: number) => {
+    addItem({
+      id: oneProduct.product.id,
+      name: oneProduct.product.name,
+      price: oneProduct.product.price,
+      image: oneProduct.product.images[0].path,
+      quantity,
+    });
+  };
 
   const plugin = React.useRef(
     Autoplay({ delay: 2000, stopOnInteraction: true })
@@ -96,7 +107,11 @@ export default function ProductDetail() {
               rating={oneProduct.product.rating ?? 0}
             />
           </div>
-          <AddToCartForm showBuyNow={oneProduct.product.status === "ACTIVE"} />
+          <AddToCartForm
+            showBuyNow={oneProduct.product.status === "ACTIVE"}
+            onHandleUpdate={handleUpdate}
+            idInCart={oneProduct.product.id}
+          />
           <Separator className="my-1.5" />
           <div>
             <Accordion

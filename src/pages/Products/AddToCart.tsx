@@ -16,24 +16,100 @@ import { Input } from "@/components/ui/input";
 import { MinusIcon, PlusIcon, ShoppingBasketIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useCartStore } from "@/store/cartStore";
+import { useEffect } from "react";
 const quantitySchema = z.object({
-  number: z.number().min(1).max(4, "too many items"),
+  quantity: z
+    .string()
+    .min(1, "Must not be empty")
+    .max(4, "Too Many! Is it real?")
+    .regex(/^\d+$/, "Must be a number"),
 });
 
-export default function AddToCart({ showBuyNow }: { showBuyNow?: boolean }) {
+interface AddToCartProps {
+  showBuyNow?: boolean;
+  onHandleUpdate: (quantity: number) => void;
+  idInCart: number;
+}
+
+export default function AddToCart({
+  showBuyNow,
+  onHandleUpdate,
+  idInCart,
+}: AddToCartProps) {
+  const cartItem = useCartStore((state) =>
+    state.carts.find((item) => item.id === idInCart)
+  );
   // ...
   // 1. Define your form.
   const form = useForm<z.infer<typeof quantitySchema>>({
     resolver: zodResolver(quantitySchema),
     defaultValues: {
-      number: 1, // Default quantity
+      quantity: cartItem ? cartItem.quantity.toString() : "1", // Default quantity
     },
   });
 
+  const { setValue, watch } = form;
+  const currentQuantity = Number(watch("quantity"));
+
+  useEffect(() => {
+    if (cartItem) {
+      setValue("quantity", cartItem.quantity.toString(), {
+        shouldValidate: true,
+      });
+    }
+  }, [cartItem, setValue]);
+
+  const handleDecrease = () => {
+    const newQuantity = Math.max(currentQuantity - 1, 0); // Min limit 0
+    setValue("quantity", newQuantity.toString(), { shouldValidate: true });
+    // onUpdate(newQuantity);
+  };
+
+  const handleIncrease = () => {
+    const newQuantity = Math.min(currentQuantity + 1, 9999); // Max limit 9999
+    setValue("quantity", newQuantity.toString(), { shouldValidate: true });
+    // onUpdate(newQuantity);
+  };
+
+  // });
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof quantitySchema>) {
-    console.log(values);
+    //
+    onHandleUpdate(Number(values.quantity));
   }
+  // const { setValue, watch } = form;
+  // const currentQuantity = Number(watch("quantity"));
+
+  // useEffect(() => {
+  //   if (cartItem) {
+  //     setValue("quantity", cartItem.quantity.toString(), {
+  //       shouldValidate: true,
+  //     });
+  //   }
+  // }, [cartItem, setValue]);
+
+  // useEffect(() => {
+  //   if (cartItem && cartItem.quantity.toString() !== form.getValues("quantity")) {
+  //     setValue("quantity", cartItem.quantity.toString(), {
+  //       shouldValidate: true,
+  //     });
+  //   }
+  //   // Only run when cartItem changes, not on every render
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [cartItem]);
+
+  // useEffect(() => {
+  //   const currentFormQuantity = form.getValues("quantity");
+  //   if (cartItem && cartItem.quantity.toString() !== currentFormQuantity) {
+  //     setValue("quantity", cartItem.quantity.toString(), {
+  //       shouldValidate: true,
+  //     });
+  //   }
+  //   // Only run when cartItem changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [cartItem]);
+
   return (
     <Form {...form}>
       <form
@@ -46,21 +122,24 @@ export default function AddToCart({ showBuyNow }: { showBuyNow?: boolean }) {
             type="button"
             variant={"outline"}
             size={"icon"}
+            onClick={handleDecrease}
+            disabled={currentQuantity <= 1}
           >
             <MinusIcon className="size-3" />
           </Button>
           <FormField
             control={form.control}
-            name="number"
+            name="quantity"
             render={({ field }) => (
               <FormItem className="relative space-y-0">
                 <FormControl>
                   <Input
                     type="number"
                     inputMode="numeric"
-                    min={0}
+                    min={1}
+                    max={9999}
                     {...field}
-                    className="h-8 w-16 rounded-none border-x-0"
+                    className="h-8 w-16 rounded-none border-x-0 text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none  [&::-webkit-outer-spin-button]:appearance-none"
                   />
                 </FormControl>
 
@@ -73,6 +152,8 @@ export default function AddToCart({ showBuyNow }: { showBuyNow?: boolean }) {
             type="button"
             variant={"outline"}
             size={"icon"}
+            onClick={handleIncrease}
+            disabled={currentQuantity >= 9999}
           >
             <PlusIcon className="size-3" />
           </Button>
@@ -95,7 +176,7 @@ export default function AddToCart({ showBuyNow }: { showBuyNow?: boolean }) {
             className="w-[130px] text-black"
           >
             <ShoppingBasketIcon />
-            Add to Cart
+            {cartItem ? "Update Cart" : "Add to Cart"}
           </Button>
         </div>
       </form>
