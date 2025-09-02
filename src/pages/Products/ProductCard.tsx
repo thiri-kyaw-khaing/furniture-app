@@ -11,13 +11,27 @@ import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import type { HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
+import { useCartStore } from "@/store/cartStore";
 interface ProductProps extends HTMLAttributes<HTMLDivElement> {
   product: Product;
 }
+
 const imgUrl = import.meta.env.VITE_IMG_URL;
 const AspectRatio = AspectRatioPrimitive.Root;
 
 export default function ProductCard({ product, className }: ProductProps) {
+  const { carts, addItem } = useCartStore();
+  const cartItem = carts.find((item) => item.id === product.id);
+
+  const cartHandler = () => {
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.images[0].path,
+      quantity: 1,
+    });
+  };
   return (
     <Card
       className={cn("overflow-hidden rounded-lg flex flex-col p-8", className)}
@@ -44,15 +58,28 @@ export default function ProductCard({ product, className }: ProductProps) {
           )}
         </CardFooter>
       </Link>
-      <Button size="sm" disabled={product.status === "sold"} className="m-2">
-        {product.status === "sold" ? (
-          "Sold Out"
+      <CardFooter className="p-4 pt-1">
+        {product.status === "INACTIVE" ? (
+          <Button
+            size="sm"
+            disabled={true}
+            aria-label="Sold Out"
+            className="h-8 w-full rounded-sm font-bold"
+          >
+            Sold Out
+          </Button>
         ) : (
-          <>
-            <PlusIcon className="w-4 h-4 mr-1" /> Add to Cart
-          </>
+          <Button
+            size="sm"
+            className="h-8 w-full rounded-sm bg-black font-bold"
+            onClick={cartHandler}
+            disabled={!!cartItem}
+          >
+            {!cartItem && <PlusIcon className="" />}
+            {!cartItem ? "Add To Cart" : "Added Item"}
+          </Button>
         )}
-      </Button>
+      </CardFooter>
     </Card>
   );
 }

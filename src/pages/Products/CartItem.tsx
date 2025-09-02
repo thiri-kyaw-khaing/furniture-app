@@ -1,12 +1,14 @@
 import type { Cart } from "@/types";
 import Editable from "@/pages/Products/Editable.tsx";
 import { useCartStore } from "@/store/cartStore";
+import { formatPrice } from "@/lib/utils";
 const imgUrl = import.meta.env.VITE_IMG_URL;
 interface CartItemProps {
   cart: Cart;
 }
 
 export default function cartItem({ cart }: CartItemProps) {
+  console.log(cart);
   const { updateItem, removeItem } = useCartStore();
 
   const updateHandler = (quantity: number) => {
@@ -22,7 +24,10 @@ export default function cartItem({ cart }: CartItemProps) {
         <img src={imgUrl + cart.image} alt="" className="w-16" />
         <div className="flex space-y-1 flex-col">
           <span className="line-clamp-1 text-sm font-medium">{cart.name}</span>
-          <span className="text-xs text-muted-foreground">{cart.price}</span>
+          <span className="text-xs text-muted-foreground">
+            {formatPrice(cart.price)} x {cart.quantity} ={" "}
+            {formatPrice((cart.price * cart.quantity).toFixed(2))}
+          </span>
           {/* <span className="line-clamp-1 text-xs capitalize">{cart.category}</span> */}
         </div>
       </div>

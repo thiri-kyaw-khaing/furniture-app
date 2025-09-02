@@ -38,7 +38,7 @@ export default function CartSheet() {
           <ShoppingCart className="size-4" />
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-full md:max-w-lg flex h-full flex-col">
+      <SheetContent className="w-full md:max-w-lg p-6">
         <SheetHeader className="mb-2">
           <SheetTitle className=" font-medium">Cart - {itemCount}</SheetTitle>
         </SheetHeader>
