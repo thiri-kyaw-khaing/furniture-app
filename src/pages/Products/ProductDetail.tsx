@@ -105,6 +105,7 @@ export default function ProductDetail() {
             <AddtoFav
               productId={oneProduct.product.id ?? ""}
               rating={oneProduct.product.rating ?? 0}
+              isFavourite={oneProduct.product.users.length === 1}
             />
           </div>
           <AddToCartForm

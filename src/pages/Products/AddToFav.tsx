@@ -6,11 +6,13 @@ import { HeartFilledIcon } from "@radix-ui/react-icons";
 interface FavProps extends ButtonProps {
   productId: string;
   rating: number;
+  isFavourite: boolean;
 }
 
 export default function AddtoFav({
   productId,
-  rating,
+  isFavourite,
+  //   rating,
   className,
   ...props
 }: FavProps) {
@@ -21,8 +23,12 @@ export default function AddtoFav({
       className={cn("size-8 shrink-0", className)}
       {...props}
     >
+      {isFavourite ? (
+        <HeartFilledIcon className="size-4 text-red-500" />
+      ) : (
+        <HeartIcon className="size-4 text-red-500" />
+      )}
       {/* <HeartIcon className="size-4"/> */}
-      <HeartFilledIcon className="size-4 text-red-500" />
     </Button>
   );
 }
