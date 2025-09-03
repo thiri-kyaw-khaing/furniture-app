@@ -195,7 +195,7 @@ export const favouriteAction = async ({
 }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const data = {
-    productId: params.productId,
+    productId: Number(params.productId),
     favourite: formData.get("favourite") === "true",
   };
 
