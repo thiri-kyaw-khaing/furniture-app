@@ -102,9 +102,14 @@ export default function ProductDetail() {
           </p>
           <div className="flex items-center justify-between">
             <Rating rating={Number(oneProduct.product.rating)} />
-            <AddtoFav
-              productId={oneProduct.product.id ?? ""}
+            {/* <AddtoFav
+              productId={String(oneProduct.product.id ?? "")}
               rating={oneProduct.product.rating ?? 0}
+              isFavourite={oneProduct.product.users.length === 1}
+            /> */}
+            <AddtoFav
+              productId={String(oneProduct.product.id)}
+              rating={Number(oneProduct.product.rating)}
               isFavourite={oneProduct.product.users.length === 1}
             />
           </div>

@@ -189,32 +189,64 @@ export const newPasswordAction = async ({ request }: ActionFunctionArgs) => {
   }
 };
 
+// export const favouriteAction = async ({
+//   request,
+//   params,
+// }: ActionFunctionArgs) => {
+//   const formData = await request.formData();
+//   const data = {
+//     productId: Number(params.productId),
+//     favourite: formData.get("favourite") === "true",
+//   };
+
+//   try {
+//     const response = await authApi.patch(
+//       "/users/products/toggle-favourite",
+//       data
+//     );
+//     if (response.data === 200) {
+//       await queryClient.invalidateQueries({
+//         queryKey: ["products", "detail", params.productId],
+//       });
+//       return null;
+//     } else {
+//       return { error: response.data || "Adding Favourite failed" };
+//     }
+//   } catch (error) {
+//     if (error instanceof AxiosError) {
+//       return error.response?.data || { error: "Adding Favourite failed" };
+//     } else throw error;
+//   }
+// };
+
 export const favouriteAction = async ({
   request,
   params,
 }: ActionFunctionArgs) => {
   const formData = await request.formData();
+  if (!params.productId) {
+    throw new Error("No Product ID provided");
+  }
+
   const data = {
     productId: Number(params.productId),
-    favourite: formData.get("favourite") === "true",
+    favourite: formData.get("favourite") === "true", // true
   };
 
   try {
-    const response = await authApi.patch(
-      "/users/products/toggle-favourite",
-      data
-    );
-    if (response.data === 200) {
-      await queryClient.invalidateQueries({
-        queryKey: ["products", "detail", params.productId],
-      });
-      return null;
-    } else {
-      return { error: response.data || "Adding Favourite failed" };
+    const response = await api.patch("users/products/toggle-favourite", data);
+    if (response.status !== 200) {
+      return { error: response.data || "Setting favourite Failed!" };
     }
+
+    await queryClient.invalidateQueries({
+      queryKey: ["products", "detail", params.productId],
+    });
+
+    return null;
   } catch (error) {
     if (error instanceof AxiosError) {
-      return error.response?.data || { error: "Adding Favourite failed" };
+      return error.response?.data || { error: "Setting favourite failed!" };
     } else throw error;
   }
 };

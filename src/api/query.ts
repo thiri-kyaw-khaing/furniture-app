@@ -138,6 +138,22 @@ export const InfiniteProductQuery = (
   //maxPages:6
 });
 
+// const fetchOneProduct = async (id: number) => {
+//   const product = await api.get(`users/products/${id}`);
+//   if (!product) {
+//     throw new Response("", {
+//       status: 404,
+//       statusText: "Not Found",
+//     });
+//   }
+//   return product.data;
+// };
+
+// export const oneProductQuery = (id: number) => ({
+//   queryKey: ["product", "detail", "query", id],
+//   queryFn: () => fetchOneProduct(id),
+// });
+
 const fetchOneProduct = async (id: number) => {
   const product = await api.get(`users/products/${id}`);
   if (!product) {
@@ -150,6 +166,6 @@ const fetchOneProduct = async (id: number) => {
 };
 
 export const oneProductQuery = (id: number) => ({
-  queryKey: ["product", "detail", "query", id],
+  queryKey: ["products", "detail", id],
   queryFn: () => fetchOneProduct(id),
 });
