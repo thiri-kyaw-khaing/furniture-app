@@ -24,6 +24,7 @@ import ProductDetailPage from "@/pages/Products/ProductDetail.tsx";
 import Login from "@/pages/Auth/Login.tsx";
 import {
   confirmPasswordAction,
+  favouriteAction,
   loginAction,
   logoutAction,
   newPasswordAction,
@@ -70,6 +71,7 @@ export const router = createBrowserRouter([
             path: ":productId",
             Component: ProductDetailPage,
             loader: oneProductLoader,
+            action: favouriteAction,
           },
         ],
       },

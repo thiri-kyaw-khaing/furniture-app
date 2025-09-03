@@ -4,6 +4,7 @@ import { AxiosError } from "axios";
 import { type ActionFunctionArgs } from "react-router-dom";
 import { redirect } from "react-router-dom";
 import useAuthStore, { Status } from "@/store/authStore";
+import { queryClient } from "@/api/query";
 export const loginAction = async ({ request }: ActionFunctionArgs) => {
   // request=user input to login
   const formData = await request.formData();
@@ -184,6 +185,36 @@ export const newPasswordAction = async ({ request }: ActionFunctionArgs) => {
   } catch (error) {
     if (error instanceof AxiosError) {
       return error.response?.data || { error: "Resetting password failed" };
+    } else throw error;
+  }
+};
+
+export const favouriteAction = async ({
+  request,
+  params,
+}: ActionFunctionArgs) => {
+  const formData = await request.formData();
+  const data = {
+    productId: params.productId,
+    favourite: formData.get("favourite") === "true",
+  };
+
+  try {
+    const response = await authApi.patch(
+      "/users/products/toggle-favourite",
+      data
+    );
+    if (response.data === 200) {
+      await queryClient.invalidateQueries({
+        queryKey: ["products", "detail", params.productId],
+      });
+      return null;
+    } else {
+      return { error: response.data || "Adding Favourite failed" };
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return error.response?.data || { error: "Adding Favourite failed" };
     } else throw error;
   }
 };
